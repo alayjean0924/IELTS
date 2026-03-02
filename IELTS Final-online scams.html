@@ -1,0 +1,183 @@
+---
+title: "Online Scam 網路詐騙"
+---
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ｍs. Jin's 雅思閱讀複習字卡</title>
+    <style>
+        :root {
+            --primary: #4a90e2; --primary-dark: #357abd;
+            --success: #2ecc71; --danger: #e74c3c;
+            --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text: #2c3e50; --gold: #f39c12;
+        }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; display: flex; justify-content: center; padding: 20px 0; color: var(--text); }
+        #app { width: 95%; max-width: 750px; text-align: center; }
+        .screen { display: none; animation: fadeIn 0.3s ease; width: 100%; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        
+        .home-card { background: white; padding: 40px 25px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary); font-size: 2rem; margin-bottom: 10px; font-weight: 800; }
+        .topic-badge { background: #e1f0ff; color: var(--primary); padding: 8px 20px; border-radius: 50px; font-weight: bold; display: inline-block; margin-bottom: 30px; }
+        
+        .mode-select { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+        .btn-mode { border: 2px solid #eee; background: white; padding: 25px; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; text-align: left; position: relative; overflow: hidden; }
+        .btn-mode:hover { border-color: var(--primary); background: #f8fbff; transform: translateY(-3px); }
+        .btn-mode h3 { margin: 0 0 5px 0; color: var(--primary); }
+        .btn-mode p { margin: 0; font-size: 0.9rem; color: #666; }
+        
+        .card { background: white; padding: 40px 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); min-height: 250px; display: flex; flex-direction: column; justify-content: center; margin-bottom: 30px; position: relative; }
+        .sentence { font-size: 1.4rem; line-height: 1.6; margin-bottom: 20px; font-weight: 500; }
+        .blank { border-bottom: 3px solid var(--primary); color: var(--primary); padding: 0 10px; font-weight: bold; min-width: 80px; display: inline-block; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-opt { background: white; border: 2px solid #e0e6ed; padding: 15px; border-radius: 15px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        .btn-opt:hover { background: #f0f7ff; border-color: var(--primary); }
+        .correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; }
+        .wrong { background: var(--danger) !important; color: white !important; border-color: var(--danger) !important; }
+        
+        .nav-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; }
+        .progress-text { font-weight: bold; color: #95a5a6; }
+        .btn-audio { background: #eee; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
+
+        .result-card { background: white; padding: 30px; border-radius: 30px; text-align: left; }
+        .result-item { padding: 15px 0; border-bottom: 1px solid #eee; }
+        .text-green { color: var(--success); font-weight: bold; }
+        .text-red { color: var(--danger); font-weight: bold; }
+        .btn-main { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 15px; width: 100%; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="screen-home" class="screen active">
+        <div class="home-card">
+            <h1>Ms. Jin's 雅思閱讀複習字卡</h1>
+            <div class="topic-badge">Online Scam 網路詐騙</div>
+            <div class="mode-select">
+                <div class="btn-mode" onclick="startApp('review')">
+                    <h3>📖 瀏覽複習模式</h3>
+                    <p>查看例句、單字與發音，建立初步印象。</p>
+                </div>
+                <div class="btn-mode" onclick="startApp('quiz')">
+                    <h3>✍️ 自我測驗模式</h3>
+                    <p>填空練習，挑戰看看你能對幾題！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-game" class="screen">
+        <div class="card">
+            <div id="display-area" class="sentence"></div>
+            <div id="meaning-area" style="color:#7f8c8d; margin-top:10px;"></div>
+        </div>
+        <div id="options-area" class="options-grid"></div>
+        <div class="nav-tools">
+            <button class="btn-audio" onclick="playAudio('sentence')">🔊</button>
+            <div id="progress-info" class="progress-text">1 / 10</div>
+            <button class="btn-audio" onclick="playAudio('word')">🔤</button>
+        </div>
+    </div>
+
+    <div id="screen-result" class="screen">
+        <div class="result-card">
+            <h2 id="result-title" style="text-align:center;">學習報告</h2>
+            <div id="result-stats" style="text-align:center; margin-bottom:20px; font-weight:bold;"></div>
+            <div id="report-list-view"></div>
+            <button class="btn-main" onclick="location.reload()">回到選單</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const allData = [
+        { w: "Identity theft", m: "身分盜用", s: "Online scammers often engage in <span class='blank'>Identity theft</span> to access bank accounts." },
+        { w: "Fraudulent", m: "欺詐的", s: "Be careful of <span class='blank'>Fraudulent</span> emails that ask for your password." },
+        { w: "Phishing", m: "網路釣魚", s: "<span class='blank'>Phishing</span> is a common method used to steal personal information." },
+        { w: "Impersonate", m: "冒充", s: "Criminals may <span class='blank'>Impersonate</span> government officials in phone calls." },
+        { w: "Verify", m: "核實", s: "Always <span class='blank'>Verify</span> the sender's email address before clicking links." },
+        { w: "Suspicious", m: "可疑的", s: "Report any <span class='blank'>Suspicious</span> activity on your credit card immediately." },
+        { w: "Encryption", m: "加密", s: "Strong <span class='blank'>Encryption</span> helps protect your data from being hacked." },
+        { w: "Vulnerability", m: "漏洞", s: "Software updates often fix a security <span class='blank'>Vulnerability</span>." },
+        { w: "Credential", m: "憑據/證件", s: "Never share your login <span class='blank'>Credential</span> with anyone." },
+        { w: "Pretext", m: "藉口", s: "The scammer contacted him under the <span class='blank'>Pretext</span> of a lucky draw win." }
+    ];
+
+    let mode = ''; let curIdx = 0; let score = 0; let sessionWords = []; let done = []; let studentAnswers = [];
+
+    function startApp(selectedMode) {
+        mode = selectedMode; sessionWords = [...allData].sort(() => 0.5 - Math.random());
+        curIdx = 0; score = 0; done = []; studentAnswers = [];
+        showScreen('screen-game'); showQuestion();
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function showQuestion() {
+        const item = sessionWords[curIdx];
+        document.getElementById('progress-info').innerText = `${curIdx + 1} / ${sessionWords.length}`;
+        
+        if (mode === 'review') {
+            document.getElementById('display-area').innerHTML = item.s.replace("<span class='blank'>", "<span style='color:var(--primary)'>");
+            document.getElementById('meaning-area').innerText = `${item.w} (${item.m})`;
+            document.getElementById('options-area').innerHTML = `<button class="btn-main" onclick="nextQ()">下一個</button>`;
+        } else {
+            document.getElementById('display-area').innerHTML = item.s.replace("<span class='blank'>", "_______");
+            document.getElementById('meaning-area').innerText = `提示：${item.m}`;
+            const opts = [item.w, ...allData.filter(x => x.w !== item.w).sort(() => 0.5 - Math.random()).slice(0, 3).map(x => x.w)].sort();
+            document.getElementById('options-area').innerHTML = opts.map(o => `<button class="btn-opt" onclick="checkAns(this, '${o}')">${o}</button>`).join('');
+        }
+    }
+
+    function checkAns(btn, ans) {
+        if (done[curIdx]) return;
+        const correct = sessionWords[curIdx].w;
+        studentAnswers[curIdx] = ans;
+        if (ans === correct) { btn.classList.add('correct'); score++; done[curIdx] = true; }
+        else { btn.classList.add('wrong'); done[curIdx] = false; }
+        setTimeout(nextQ, 800);
+    }
+
+    function nextQ() {
+        curIdx++;
+        if (curIdx < sessionWords.length) showQuestion();
+        else showResult();
+    }
+
+    function showResult() {
+        showScreen('screen-result');
+        const rate = Math.round((score / sessionWords.length) * 100);
+        document.getElementById('result-stats').innerText = mode === 'review' ? `今日複習了 ${sessionWords.length} 個單字` : `總答對率：${rate}% | 實得題數：${score} / ${sessionWords.length}`;
+        const listArea = document.getElementById('report-list-view'); listArea.innerHTML = '';
+        sessionWords.forEach((item, index) => {
+            const isCorrect = mode === 'review' ? true : (studentAnswers[index] === item.w);
+            const div = document.createElement('div'); div.className = 'result-item';
+            if (mode === 'quiz') {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">題 ${index + 1}：${item.s.replace("<span class='blank'>", "_______")}</div>
+                    <div>你的作答：<span class="${isCorrect ? 'text-green' : 'text-red'}">${studentAnswers[index] || "（跳過）"}</span></div>
+                    <div class="text-green">正確答案：${item.w} (${item.m})</div>`;
+            } else {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">${item.s.replace("<span class='blank'>", "<u>").replace("</span>", "</u>")}</div><div class="text-green">正確單字：${item.w} (${item.m})</div>`;
+            }
+            listArea.appendChild(div);
+        });
+    }
+
+    function playAudio(type) {
+        const item = sessionWords[curIdx]; if(!item) return;
+        const textToSpeak = type === 'word' ? item.w : document.getElementById('display-area').innerText;
+        const utter = new SpeechSynthesisUtterance(textToSpeak);
+        utter.lang = 'en-US'; window.speechSynthesis.speak(utter);
+    }
+</script>
+
+</body>
+</html>
