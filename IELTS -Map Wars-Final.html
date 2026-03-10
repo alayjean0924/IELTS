@@ -1,0 +1,400 @@
+---
+title: "Map Wars 地圖之戰"
+---
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ｍs. Jin's 雅思閱讀複習字卡</title>
+    <style>
+        :root {
+            --primary: #4a90e2; --primary-dark: #357abd;
+            --success: #2ecc71; --danger: #e74c3c;
+            --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text: #2c3e50; --gold: #f39c12;
+        }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; display: flex; justify-content: center; padding: 20px 0; color: var(--text); }
+        #app { width: 95%; max-width: 750px; text-align: center; }
+        .screen { display: none; animation: fadeIn 0.3s ease; width: 100%; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        
+        .home-card { background: white; padding: 40px 25px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .home-card h1 { font-size: 2.2rem; color: var(--primary); margin: 0 0 10px; font-weight: 800; }
+        .home-card h2 { font-size: 2.1rem; color: #2c3e50; margin: 20px 0; font-weight: 900; }
+        
+        .stats-info { background: #f8f9fa; padding: 15px; border-radius: 15px; margin: 20px 0; font-weight: bold; color: #555; border: 1px solid #eee; }
+        .selector-group { margin: 25px 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .num-btn { background: white; border: 2px solid #ddd; padding: 12px 22px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .num-btn.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
+        
+        .btn-main { background: var(--primary); color: white; border: none; padding: 18px 50px; font-size: 1.3rem; border-radius: 50px; cursor: pointer; margin: 10px; width: 85%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+        .btn-home { background: #95a5a6; font-size: 1.1rem; margin-top: 25px; }
+
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(255,255,255,0.9); padding: 15px 25px; border-radius: 20px; }
+        .btn-back-home { background: var(--primary); color: white; border: none; padding: 8px 18px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        
+        .card-container { perspective: 1500px; margin-bottom: 20px; }
+        .card-inner { position: relative; width: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; display: flex; min-height: 480px; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        .card-face { width: 100%; padding: 30px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        .card-back { position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: #fffdf5; border: 3px solid var(--gold); transform: rotateY(180deg); z-index: 1; }
+        
+        .tag { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: white; margin-bottom: 10px; display: inline-block; }
+        .tag-pos { background: var(--gold); }
+        .tag-loc { background: #95a5a6; margin-left: 5px; }
+        .vocab-word { font-size: 2.8rem; color: var(--primary); font-weight: 800; margin: 10px 0; }
+        
+        .original-sent-container { background: #fffdf0; border: 2px dashed var(--gold); border-radius: 20px; padding: 20px; margin: 15px 0; text-align: left; }
+        .synonym-container { background: #ffffff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-top: 10px; text-align: left; }
+        .synonym-title { font-weight: bold; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 5px; }
+        .synonym-word { color: #e67e22; font-weight: 800; font-size: 1.1rem; }
+        .synonym-example { font-style: italic; font-size: 0.9rem; color: #95a5a6; margin-top: 5px; line-height: 1.4; }
+        
+        .sent-box { font-size: 1.4rem; line-height: 1.6; color: #34495e; text-align: left; }
+        .blank-text { color: var(--primary); font-weight: 900; border-bottom: 3px solid var(--primary) !important; padding: 0 10px; margin: 0 4px; display: inline-block; min-width: 100px; text-align: center; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .opt-btn { background: white; border: 2px solid #eef2f7; padding: 20px; border-radius: 15px; font-size: 1.2rem; cursor: pointer; transition: 0.2s; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .opt-btn:hover { border-color: var(--primary); background: #f0f7ff; }
+        
+        .feedback-area { background: #fff; padding: 25px; border-radius: 25px; border: 2px solid #ddd; text-align: left; margin-top: 15px; }
+        .correct-style { background: var(--success) !important; color: white; border-color: var(--success); }
+        .wrong-style { background: var(--danger) !important; color: white; border-color: var(--danger); }
+        
+        .nav-bar { display: flex; justify-content: space-between; margin-top: 25px; gap: 15px; }
+        .btn-nav { flex: 1; padding: 18px; border-radius: 20px; border: none; background: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-nav:hover { background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+
+        .result-list { text-align: left; background: #f8f9fa; border-radius: 20px; padding: 20px; margin-top: 25px; max-height: 450px; overflow-y: auto; }
+        .result-item { border-bottom: 1px solid #ddd; padding: 15px 0; font-size: 1.1rem; }
+        .text-green { color: var(--success); font-weight: bold; }
+        .text-red { color: var(--danger); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="home-screen" class="screen active">
+        <div class="home-card">
+            <h1>Ｍs. Jin's 雅思閱讀複習字卡</h1>
+            <h2>Map Wars (精選 60 單字)</h2>
+            <div id="pool-info" class="stats-info">載入中...</div>
+            <div class="selector-group">
+                <button class="num-btn" onclick="selectCount(20)">20 題</button>
+                <button class="num-btn" onclick="selectCount(40)">40 題</button>
+                <button class="num-btn selected" onclick="selectCount(60)">全挑戰</button>
+            </div>
+            <button class="btn-main" onclick="start('review')">📖 複習模式</button><br>
+            <button class="btn-main" onclick="start('quiz')">📝 測驗模式</button>
+            <br>
+            <button class="btn-main btn-home" onclick="window.location.href='./index.html'">🏠 回到 Ms. Jin's 首頁</button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen">
+        <div class="top-nav">
+            <button class="btn-back-home" onclick="goHome()">🏠 回主選單</button>
+            <div style="font-weight: 800; color: var(--primary);"><span id="mode-label"></span> | <span id="progress-label"></span></div>
+        </div>
+        <div class="card-container">
+            <div class="card-inner" id="main-card-inner" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div id="quiz-stem-area" style="display:none;" class="sent-box"></div>
+                    <div id="front-meta" style="display:none;">
+                        <span class="tag tag-pos" id="front-pos"></span><span class="tag tag-loc" id="front-loc"></span>
+                        <div class="vocab-word"><span id="display-word"></span> <span onclick="playAudio('word');event.stopPropagation()">🔊</span></div>
+                        <div id="review-visual-layer">
+                            <div class="original-sent-container">
+                                <div id="review-sent" class="sent-box"></div>
+                                <button class="btn-nav" style="padding:10px 20px; font-size:0.9rem; width:auto; margin-top:10px;" onclick="playAudio('sent');event.stopPropagation()">🔊 朗讀例句</button>
+                            </div>
+                            <div id="front-synonym-box" class="synonym-container">
+                                <div class="synonym-title">IELTS 同義代換考點 (Paraphrasing)</div>
+                                <div>題目考點：<span id="syn-word-display" class="synonym-word"></span></div>
+                                <div id="syn-ex-display" class="synonym-example"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="vocab-word" id="back-word-zh" style="color: #333;"></div>
+                    <div class="sent-box" id="back-sent-zh" style="text-align:center; color:#666; font-size:1.1rem"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quiz-options-area" style="display:none;">
+            <div id="initial-options" class="options-grid"></div>
+            <div id="feedback-area" class="feedback-area" style="display:none;">
+                <div id="fb-status" style="font-weight:bold; font-size:1.3rem"></div>
+                <div id="fb-sent-full" style="font-style:italic; margin:10px 0; color:#333"></div>
+                <button class="btn-nav" style="padding:10px 20px; font-size:0.9rem; width:auto; margin-bottom:15px;" onclick="playAudio('sent')">🔊 聽正確句子</button>
+                <div id="fb-sent-zh" style="color:#666; font-size:1.1rem; border-top:1px dashed #ddd; padding-top:10px;"></div>
+                <div id="fb-options-static" class="options-grid"></div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button class="btn-nav" onclick="moveStep(-1)">← 上一個</button>
+            <button class="btn-nav" onclick="moveStep(1)">下一個 →</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="home-card">
+            <h2 id="final-title" style="margin-bottom:20px;">學習完成！</h2>
+            <div id="quiz-reveal-actions" style="display:none; margin: 20px 0;">
+                <button class="btn-main" onclick="revealReport()">📊 看成績與答案</button>
+            </div>
+            <div id="quiz-report-view" style="display:none;">
+                <div id="final-score" style="font-size: 3.5rem; color: var(--primary); font-weight: 800; margin: 10px 0;"></div>
+                <p id="final-stats" style="font-size: 1.2rem; color: #7f8c8d; margin-bottom: 20px;"></p>
+                <div id="report-list-view" class="result-list"></div>
+            </div>
+            <button class="btn-main" onclick="goHome()" style="margin-top: 25px; background: #95a5a6;">回主單元選單</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const rawData = [
+        {id:0,w:"point of view",loc:"Para 4",s:"Every map of the world expresses a point of view, consciously or unconsciously.",m:"觀點/立場",pos:"N.phr",sz:"每張世界地圖都在自覺或不自覺地表達一種觀點。",syn:"perspective",syne:"Maps represent a subjective perspective, not just facts."},
+        {id:1,w:"precise",loc:"Para 5",s:"Although a sphere is a good model, the earth is actually an ellipsoid to be precise.",m:"精確的",pos:"adj.",sz:"雖然球體是個不錯的模型，但精確來說，地球實際上是一個橢球體。",syn:"accurate",syne:"Precision and accuracy are vital for mapping."},
+        {id:2,w:"spin",loc:"Para 7",s:"To understand the global positioning, buy a globe and spin it around to see the continents.",m:"旋轉",pos:"v.",sz:"為了理解全球定位，買個地球儀並旋轉它以查看各大洲。",syn:"rotate",syne:"Rotating the globe allows you to see relative positions."},
+        {id:3,w:"representation",loc:"Para 9",s:"Any flat map is merely a two-dimensional representation of a three-dimensional world.",m:"呈現/代表",pos:"n.",sz:"任何平面地圖都僅僅是三維世界的二維呈現方式。",syn:"depiction",syne:"A flat depiction requires certain geographical assumptions."},
+        {id:4,w:"assumption",loc:"Para 10",s:"Cartographers must decide which geographical assumption is most important to preserve.",m:"假設",pos:"n.",sz:"製圖師必須決定保留哪種地理假設最為重要。",syn:"premise",syne:"Every projection is built on a specific premise."},
+        {id:5,w:"cylindrical",loc:"Para 11",s:"The Mercator projection is a type of cylindrical projection, often used for sea navigation.",m:"圓柱狀的",pos:"adj.",sz:"麥卡托投影是一種圓柱投影，常用於海上航行。",syn:"wrapped",syne:"This involves wrapping a cylinder around the earth."},
+        {id:6,w:"fidelity",loc:"Para 13",s:"A map that correctly indicates true north and south is said to have fidelity of axis.",m:"忠實度/精確度",pos:"n.",sz:"正確指示正南北的地圖被稱為具備軸線忠實度。",syn:"accuracy",syne:"Maintaining axis accuracy is crucial for navigators."},
+        {id:7,w:"navigation",loc:"Para 14",s:"Mercator's view was primarily based on the navigational needs of explorers.",m:"航行",pos:"n.",sz:"麥卡托的觀點主要基於探險家的導航需求。",syn:"sailing",syne:"Early sailing required maps with fidelity of angle."},
+        {id:8,w:"prominent",loc:"Para 36",s:"Large landmasses like Greenland look very prominent in the Mercator projection.",m:"顯著的/突出的",pos:"adj.",sz:"格陵蘭島等大型陸塊在麥卡托投影中看起來非常顯眼。",syn:"conspicuous",syne:"In some maps, certain regions are given a conspicuous position."},
+        {id:9,w:"distort",loc:"Para 74",s:"All flat maps contain some degree of distortion, whether in size, shape, or distance.",m:"扭曲/失真",pos:"v.",sz:"所有平面地圖都包含某種程度的失真，無論是在大小、形狀還是距離上。",syn:"misrepresent",syne:"Maps often misrepresent the true size of the Global South."},
+        {id:10,w:"objective",loc:"Q 40",s:"The writer emphasizes that students must realize maps are not objective documents.",m:"客觀的",pos:"adj.",sz:"作者強調學生必須意識到地圖並非客觀的文件。",syn:"neutral",syne:"Maps are not neutral; they reflect the cartographer's view."},
+        {id:11,w:"shrink",loc:"Para 34",s:"The Mercator map shrank the developing countries because they are near the equator.",m:"縮小",pos:"v.",sz:"麥卡托地圖縮小了開發中國家，因為它們位於赤道附近。",syn:"minimize",syne:"Projections may minimize the visible scale of certain continents."},
+        {id:12,w:"bend",loc:"Para 29",s:"To correctly represent shapes, the straight lines of latitude and longitude had to be bent.",m:"彎曲",pos:"v.",sz:"為了正確呈現形狀，原本筆直的經緯線必須被彎曲。",syn:"curve",syne:"Curving the grid lines helps preserve relative sizes."},
+        {id:13,w:"misrepresent",loc:"Q 32",s:"Critics claim that some projections misrepresent the true relative sizes of global regions.",m:"不實呈現",pos:"v.",sz:"評論家聲稱某些投影法不實地呈現了全球區域的真實相對大小。",syn:"distort",syne:"It is clear that the size of Africa is distorted in many maps."},
+        {id:14,w:"stem from",loc:"Ext.",s:"The current debate over map accuracy stems from the historical need for navigation.",m:"源自於",pos:"V.phr",sz:"當前關於地圖準確性的爭論源於歷史上的航行需求。",syn:"originate from",syne:"The Cylindrical projection originated from simple geometric ideas."},
+        {id:15,w:"radical",loc:"Para 41",s:"Switching to an equal-area projection results in a radical change to map shapes.",m:"根本的/徹底的",pos:"adj.",sz:"切換到等積投影會導致地圖圖形發生根本性的變化。",syn:"drastic",syne:"Peters proposed a drastic departure from traditional standards."},
+        {id:16,w:"controversial",loc:"Para 41",s:"The Peters map remains controversial because it changes the familiar shapes of continents.",m:"有爭議的",pos:"adj.",sz:"彼得斯地圖仍具爭議，因為它改變了各大洲熟悉的形狀。",syn:"disputed",syne:"His approach to map-making was highly disputed by peers."},
+        {id:17,w:"prominence",loc:"Para 36",s:"The equal-area projection ensures that no country is given prominence over another.",m:"顯著地位",pos:"n.",sz:"等積投影確保沒有特定的國家被給予高於他國的顯著地位。",syn:"importance",syne:"The map avoids giving extra importance to Northern nations."},
+        {id:18,w:"lead astray",loc:"Para 48",s:"Using any single global projection for precise navigation would lead you astray.",m:"引導至錯誤方向",pos:"V.phr",sz:"使用任何單一的全球投影法進行精確導航，最終都會讓你誤入歧途。",syn:"misguide",syne:"A biased map can misguide our understanding of geography."},
+        {id:19,w:"steer clear of",loc:"Ext.",s:"Cartographers advise us to steer clear of maps that do not state their assumptions.",m:"避開/繞開",pos:"V.phr",sz:"製圖師建議我們避開那些沒有明確說明其假設的地圖。",syn:"avoid",syne:"Avoid using a navigation map for statistical comparisons."},
+        {id:20,w:"comprehend",loc:"Q 40",s:"Advanced students must comprehend that all data visualization involves a perspective.",m:"理解/領會",pos:"v.",sz:"進階學生必須領會所有的數據視覺化都涉及一種觀點。",syn:"understand",syne:"The main point is that we need to understand that maps are not objective."},
+        {id:21,w:"ellipsoid",loc:"Para 5",s:"Sophisticated satellite data shows that the earth is an ellipsoid rather than a sphere.",m:"橢球體",pos:"n.",sz:"精確的衛星數據顯示地球是橢球體而非球體。"},
+        {id:22,w:"cartographer",loc:"Para 10",s:"The intense arguments between cartographers concern which assumptions are best.",m:"地圖製作者",pos:"n.",sz:"製圖師之間激烈的爭論主要集中在哪些假設是最好的。"},
+        {id:23,w:"latitude",loc:"Para 21",s:"To maintain fidelity, cartographers must move the lines of latitude apart.",m:"緯度",pos:"n.",sz:"為了維持精準度，製圖師必須將緯線移開。"},
+        {id:24,w:"longitude",loc:"Para 29",s:"The compromise required the lines of latitude and longitude to be curved.",m:"經度",pos:"n.",sz:"這種折衷方案要求經緯線是彎曲的。"},
+        {id:25,w:"sphere",loc:"Para 5",s:"Photographs confirmed the spherical nature of the earth.",m:"球體",pos:"n.",sz:"照片證實了地球的球體性質。"},
+        {id:26,w:"equator",loc:"Para 35",s:"The equator is drawn two-thirds of the way down on traditional maps.",m:"赤道",pos:"n.",sz:"在傳統地圖上，赤道被畫在下方三分之二處。"},
+        {id:27,w:"distortion",loc:"Para 74",s:"All flat maps contain some degree of distortion in size or shape.",m:"扭曲",pos:"n.",sz:"所有平面地圖都包含某種程度的大小或形狀扭曲。"},
+        {id:28,w:"reassurance",loc:"Para 6",s:"Satellite photographs provide comforting reassurance of the earth's shape.",m:"保證",pos:"n.",sz:"衛星照片為地球的形狀提供了令人放心的保證。"},
+        {id:29,w:"transfer",loc:"Para 11",s:"The map was created by transferring information across from the globe to the paper.",m:"轉移",pos:"v.",sz:"該地圖是透過將資訊從地球儀轉移到紙張上而創建的。"},
+        {id:30,w:"manifest",loc:"Ext.",s:"Bias in cartography manifests itself through the choice of which regions to center.",m:"表明/顯現",pos:"v.",sz:"製圖學中的偏見透過選擇以哪些區域為中心而顯現出來。"},
+        {id:31,w:"survive",loc:"Para 16",s:"The Mercator projection survives to this day in many books and maps.",m:"存續",pos:"v.",sz:"麥卡托投影法在許多書本和地圖中存續至今。"},
+        {id:32,w:"calculate",loc:"Ext.",s:"Navigators had to calculate their course based on the fidelity of angle.",m:"計算",pos:"v.",sz:"航海家必須根據角度忠實度來計算他們的航程。"},
+        {id:33,w:"render",loc:"Para 23",s:"Polar regions can scarcely be rendered accurately on flat maps.",m:"呈現",pos:"v.",sz:"極地地區幾乎無法在平面地圖上準確呈現。"},
+        {id:34,w:"originate",loc:"Para 11",s:"The cylindrical map originated from the idea of wrapping a cylinder around the earth.",m:"起源於",pos:"v.",sz:"圓柱形地圖源於將圓柱體包裹在地球周圍的想法。"},
+        {id:35,w:"subjective",loc:"Ext.",s:"Choosing a map projection is often a subjective decision.",m:"主觀的",pos:"adj.",sz:"選擇地圖投影法通常是一個主觀的決定。"},
+        {id:36,w:"significant",loc:"Ext.",s:"There is a significant difference between equal-area and conformal maps.",m:"顯著的",pos:"adj.",sz:"等積地圖與正形地圖之間存在顯著差異。"},
+        {id:37,w:"geometric",loc:"Ext.",s:"Map making is based on strict geometric principles.",m:"幾何的",pos:"adj.",sz:"地圖製作是基於嚴格的幾何原理。"},
+        {id:38,w:"global",loc:"Para 7",s:"To understand global positioning, you should use a globe.",m:"全球的",pos:"adj.",sz:"要理解全球定位，你應該使用地球儀。"},
+        {id:39,w:"radically",loc:"Para 41",s:"The Peters map does radically change the shape of Africa.",m:"徹底地",pos:"adv.",sz:"彼得斯地圖確實徹底改變了非洲的形狀。"},
+        {id:40,w:"infinitely",loc:"Para 23",s:"At the poles, the lines would be drawn infinitely far apart.",m:"無限地",pos:"adv.",sz:"在兩極，線條會被畫得無限遠。"},
+        {id:41,w:"exceptionally",loc:"Para 42",s:"Africa appears exceptionally long and thin on the Peters map.",m:"異常地",pos:"adv.",sz:"在彼得斯地圖上，非洲顯得異常細長。"},
+        {id:42,w:"widespread",loc:"Para 43",s:"There has been widespread discussion on the misrepresentation of country sizes.",m:"廣泛的",pos:"adj.",sz:"關於國家面積誤傳的問題已經有了廣泛的討論。"},
+        {id:43,w:"hemisphere",loc:"Ext.",s:"The northern hemisphere is expanded in the Mercator projection.",m:"半球",pos:"n.",sz:"在麥卡托投影中，北半球被擴大了。"},
+        {id:44,w:"coordinate",loc:"Ext.",s:"Cartographers use a system of coordinates to map the world.",m:"座標",pos:"n.",sz:"製圖師使用座標系統來繪製世界地圖。"},
+        {id:45,w:"scale",loc:"Para 26",s:"Changes in scale distort both the size and shape of countries.",m:"比例尺",pos:"n.",sz:"比例尺的變化會扭曲國家的面積 and 形狀。"},
+        {id:46,w:"dominant",loc:"Ext.",s:"The map was accused of making European powers look dominant.",m:"佔優勢的",pos:"adj.",sz:"該地圖被指責讓歐洲列強看起來佔據優勢。"},
+        {id:47,w:"equality",loc:"Ext.",s:"Peters aimed for geographic equality in his map design.",m:"平等",pos:"n.",sz:"彼得斯的目標是在地圖設計中達成地理上的平等。"},
+        {id:48,w:"criticism",loc:"Ext.",s:"The Peters map faced heavy criticism from traditional cartographers.",m:"批評",pos:"n.",sz:"彼得斯地圖面臨來自傳統製圖師的沉重批評。"},
+        {id:49,w:"demonstrate",loc:"Para 13",s:"Such a map demonstrates what is called fidelity of axis.",m:"展示/證明",pos:"v.",sz:"這種地圖展示了所謂的軸線忠實度。"},
+        {id:50,w:"advocate",loc:"Ext.",s:"He was a strong advocate for the use of equal-area maps.",m:"提倡者",pos:"n.",sz:"他是使用等積地圖的有力提倡者。"},
+        {id:51,w:"perception",loc:"Ext.",s:"Maps can change our perception of world geography.",m:"認知",pos:"n.",sz:"地圖可以改變我們對世界地理的認知。"},
+        {id:52,w:"visualize",loc:"Ext.",s:"The goal is to help students visualize the true scale of continents.",m:"想像/視覺化",pos:"v.",sz:"目標是幫助學生將各大洲的真實比例視覺化。"},
+        {id:53,w:"accuracy",loc:"Ext.",s:"Navigational accuracy is highest near the equator.",m:"準確性",pos:"n.",sz:"導航準確度在赤道附近最高。"},
+        {id:54,w:"bias",loc:"Ext.",s:"Many people fail to notice the Eurocentric bias in traditional maps.",m:"偏見",pos:"n.",sz:"許多人未能注意到傳統地圖中以歐洲為中心的偏見。"},
+        {id:55,w:"controversy",loc:"Ext.",s:"The choice of map projection is still a subject of controversy.",m:"爭議",pos:"n.",sz:"地圖投影法的選擇仍然是一個爭議話題。"},
+        {id:56,w:"compromise",loc:"Para 29",s:"To do so required a compromise: the lines had to be bent.",m:"折衷/妥協",pos:"n.",sz:"這樣做需要一種折衷：線條必須被彎曲。"},
+        {id:57,w:"proportion",loc:"Ext.",s:"Keeping the correct proportion of landmasses is a challenge.",m:"比例",pos:"n.",sz:"保持陸塊的正確比例是一個挑戰。",syn:"ratio",syne:"the ratio of land to water is key."},
+        {id:58,w:"manipulate",loc:"Ext.",s:"The map can be manipulated to emphasize certain regions.",m:"操縱",pos:"v.",sz:"地圖可以被操縱以強調某些區域。",syn:"influence",syne:"data can influence map design choices."},
+        {id:59,w:"imperialism",loc:"Ext.",s:"Historical maps were sometimes tools of Western imperialism.",m:"帝國主義",pos:"n.",sz:"歷史地圖有時是西方帝國主義的工具。",syn:"colonialism",syne:"colonialism shaped many early world maps."}
+    ];
+
+    const moePool = {
+        "n.": [{w:"safety", m:"安全"}, {w:"target", m:"目標"}, {w:"logic", m:"邏輯"}, {w:"method", m:"方法"}],
+        "v.": [{w:"attack", m:"攻擊"}, {w:"ignore", m:"忽略"}, {w:"manage", m:"管理"}, {w:"confirm", m:"確認"}],
+        "adj.": [{w:"stable", m:"穩定的"}, {w:"common", m:"常見的"}, {w:"direct", m:"直接的"}, {w:"global", m:"全球的"}],
+        "adv.": [{w:"clearly", m:"清楚地"}, {w:"actually", m:"實際上"}, {w:"totally", m:"完全地"}],
+        "V.phr": [{w:"look after", m:"照顧"}, {w:"give up", m:"放棄"}, {w:"run out", m:"用完"}],
+        "N.phr": [{w:"safety net", m:"安全網"}, {w:"life goal", m:"人生目標"}, {w:"system", m:"系統"}]
+    };
+
+    let sessionWords = []; let curIdx = 0; let mode = ''; let score = 0; let done = {}; 
+    let studentAnswers = {}; let targetCount = 60;
+
+    function selectCount(n) { targetCount = n; document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected')); event.target.classList.add('selected'); }
+    function updateStats() { document.getElementById('pool-info').innerText = "字庫項目: " + rawData.length; }
+
+    function start(m) {
+        mode = m; curIdx = 0; score = 0; done = {}; studentAnswers = {};
+        let pool = [...rawData].sort(() => 0.5 - Math.random());
+        sessionWords = pool.slice(0, Math.min(targetCount, rawData.length)).map(item => {
+            let candidates = (moePool[item.pos] || moePool["n."]);
+            let selectedDistractors = candidates.sort(() => 0.5 - Math.random()).slice(0, 3);
+            let options = [...selectedDistractors, {w: item.w, m: item.m}].sort(() => 0.5 - Math.random());
+            return { ...item, fixedOptions: options };
+        });
+        document.getElementById('home-screen').classList.remove('active');
+        document.getElementById('main-screen').classList.add('active');
+        document.getElementById('mode-label').innerText = mode === 'review' ? '複習模式' : '測驗模式';
+        render();
+    }
+
+    function render() {
+        if (curIdx >= sessionWords.length) { showFinal(); return; }
+        const item = sessionWords[curIdx]; const isDone = done[curIdx] !== undefined;
+        document.getElementById('progress-label').innerText = `${curIdx + 1} / ${sessionWords.length}`;
+        document.getElementById('main-card-inner').classList.remove('is-flipped');
+        
+        const quizStem = document.getElementById('quiz-stem-area');
+        const frontMeta = document.getElementById('front-meta');
+        const quizOptions = document.getElementById('quiz-options-area');
+        const reviewLayer = document.getElementById('review-visual-layer');
+
+        if (mode === 'review') {
+            quizStem.style.display = 'none'; quizOptions.style.display = 'none'; frontMeta.style.display = 'block';
+            reviewLayer.style.display = 'block'; 
+            document.getElementById('display-word').innerText = item.w;
+            document.getElementById('front-pos').innerText = item.pos;
+            document.getElementById('front-loc').innerText = item.loc;
+            document.getElementById('review-sent').innerText = item.s;
+            const synBox = document.getElementById('front-synonym-box');
+            if (item.syn) {
+                document.getElementById('syn-word-display').innerText = item.syn.toLowerCase();
+                document.getElementById('syn-ex-display').innerText = "💡 " + (item.syne || "");
+                synBox.style.display = 'block';
+            } else { synBox.style.display = 'none'; }
+        } else {
+            reviewLayer.style.display = 'none';
+            frontMeta.style.display = isDone ? 'block' : 'none'; 
+            quizStem.style.display = 'block'; quizOptions.style.display = 'block';
+            document.getElementById('display-word').innerText = item.w;
+            document.getElementById('front-pos').innerText = item.pos;
+            document.getElementById('front-loc').innerText = item.loc;
+
+            const fb = document.getElementById('feedback-area'); const opts = document.getElementById('initial-options');
+            if (isDone) {
+                opts.style.display = 'none'; fb.style.display = 'block';
+                quizStem.innerText = item.s; 
+                updateFB(item);
+            } else {
+                fb.style.display = 'none'; opts.style.display = 'grid';
+                
+                let stemText = item.s;
+                let wordToHide = item.w.trim();
+                let displayHTML = stemText;
+
+                // 修正後更彈性的正則表達式，處理不規則變化 (如 shrank, bent, spherical)
+                let pattern;
+                if (wordToHide === 'shrink') {
+                    pattern = /\bshrank\b|\bshrunk\b|\bshrink\b/gi;
+                } else if (wordToHide === 'bend') {
+                    pattern = /\bbent\b|\bbend\b/gi;
+                } else if (wordToHide === 'sphere') {
+                    pattern = /\bspherical\b|\bsphere\b/gi;
+                } else if (wordToHide.includes(' ')) {
+                    let parts = wordToHide.split(/\s+/);
+                    let regexStr = `\\b${parts[0]}(ed|ing|s|es|n|t|pt)?`; 
+                    for(let i=1; i<parts.length; i++) { regexStr += `\\s+${parts[i]}(ed|ing|s|es)?`; }
+                    pattern = new RegExp(regexStr + `\\b`, 'gi');
+                } else {
+                    pattern = new RegExp(`\\b${wordToHide}(ed|ing|s|es|n|t|pt)?\\b`, 'gi');
+                }
+                
+                displayHTML = stemText.replace(pattern, '<span class="blank-text"> </span>');
+                
+                // 後備方案
+                if (displayHTML === stemText) {
+                    let firstWord = wordToHide.split(' ')[0];
+                    let loosePattern = new RegExp(`\\b${firstWord}[a-z]*\\b`, 'i');
+                    displayHTML = stemText.replace(loosePattern, '<span class="blank-text"> </span>');
+                }
+
+                quizStem.innerHTML = displayHTML;
+                renderOptions(item);
+            }
+        }
+        document.getElementById('back-word-zh').innerText = item.m;
+        document.getElementById('back-sent-zh').innerText = item.sz;
+    }
+
+    function renderOptions(item) {
+        const container = document.getElementById('initial-options'); container.innerHTML = '';
+        item.fixedOptions.forEach(opt => {
+            const b = document.createElement('button'); b.className = 'opt-btn'; b.innerText = opt.w;
+            b.onclick = (e) => { e.stopPropagation(); studentAnswers[curIdx] = opt.w; checkAns(opt.w === item.w); };
+            container.appendChild(b);
+        });
+    }
+
+    function checkAns(isCorrect) { if (isCorrect) score++; done[curIdx] = isCorrect; render(); }
+    function updateFB(item) {
+        const correct = done[curIdx]; const fb = document.getElementById('feedback-area');
+        document.getElementById('fb-status').innerText = correct ? '✓ Correct!' : '✗ Incorrect';
+        document.getElementById('fb-status').style.color = correct ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('fb-sent-full').innerText = item.s;
+        document.getElementById('fb-sent-zh').innerText = "解析翻譯：" + item.sz;
+        const area = document.getElementById('fb-options-static'); area.innerHTML = '';
+        item.fixedOptions.forEach(opt => {
+            const d = document.createElement('div'); d.className = 'opt-btn ' + (opt.w === item.w ? 'correct-style' : (studentAnswers[curIdx] === opt.w ? 'wrong-style' : ''));
+            d.innerHTML = `<div>${opt.w}</div><div style="font-size:0.8rem; opacity:0.8">${opt.m}</div>`;
+            d.style.textAlign = 'center'; area.appendChild(d);
+        });
+    }
+    function flipCard() { document.getElementById('main-card-inner').classList.toggle('is-flipped'); }
+    function moveStep(n) { let next = curIdx + n; if (next >= sessionWords.length) { showFinal(); } else if (next >= 0) { curIdx = next; render(); } }
+    function showFinal() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('result-screen').classList.add('active');
+        if (mode === 'quiz') { 
+            document.getElementById('quiz-reveal-actions').style.display = 'block'; 
+            document.getElementById('quiz-report-view').style.display = 'none'; 
+            document.getElementById('final-title').innerText = "🏆 測驗完成！"; 
+        } else { 
+            document.getElementById('quiz-reveal-actions').style.display = 'none'; 
+            revealReport(); 
+            document.getElementById('final-title').innerText = "🏆 複習完成！"; 
+        }
+    }
+    function revealReport() {
+        document.getElementById('quiz-reveal-actions').style.display = 'none';
+        document.getElementById('quiz-report-view').style.display = 'block';
+        const rate = Math.round((score/sessionWords.length)*100);
+        document.getElementById('final-score').innerText = mode === 'review' ? "複習完畢" : `${rate}%`;
+        document.getElementById('final-stats').innerText = mode === 'review' ? `今日複習了 ${sessionWords.length} 個單字` : `總答對率：${rate}% | 實得題數：${score} / ${sessionWords.length}`;
+        const listArea = document.getElementById('report-list-view'); listArea.innerHTML = '';
+        sessionWords.forEach((item, index) => {
+            const isCorrect = done[index]; const div = document.createElement('div'); div.className = 'result-item';
+            if (mode === 'quiz') {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">題 ${index + 1}：${item.s}</div>
+                    <div>你的作答：<span class="${isCorrect ? 'text-green' : 'text-red'}">${studentAnswers[index] || "（跳過）"}</span></div>
+                    <div class="text-green">正確答案：${item.w} (${item.m})</div>`;
+            } else {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">${item.s}</div><div class="text-green">正確單字：${item.w} (${item.m})</div>`;
+            }
+            listArea.appendChild(div);
+        });
+    }
+    function playAudio(type) {
+        const item = sessionWords[curIdx]; if(!item) return;
+        const utter = new SpeechSynthesisUtterance(type === 'word' ? item.w : item.s);
+        utter.lang = 'en-US'; window.speechSynthesis.speak(utter);
+    }
+    function goHome() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('home-screen').classList.add('active'); updateStats(); }
+    window.onload = updateStats;
+</script>
+</body>
+</html>
