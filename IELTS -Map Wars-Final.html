@@ -226,10 +226,10 @@ title: "Map Wars 地圖之戰"
     const moePool = {
         "n.": [{w:"safety", m:"安全"}, {w:"target", m:"目標"}, {w:"logic", m:"邏輯"}, {w:"method", m:"方法"}],
         "v.": [{w:"attack", m:"攻擊"}, {w:"ignore", m:"忽略"}, {w:"manage", m:"管理"}, {w:"confirm", m:"確認"}],
-        "adj.": [{w:"stable", m:"穩定的"}, {w:"common", m:"常見的"}, {w:"direct", m:"直接的"}, {w:"global", m:"全球的"}],
+        "adj.": [{w:"stable", m:"穩定的"}, {w:"common", m:"常見的"}, {w:"direct", m:"直接的"}, {w:"active", m:"活躍的"}],
         "adv.": [{w:"clearly", m:"清楚地"}, {w:"actually", m:"實際上"}, {w:"totally", m:"完全地"}],
-        "V.phr": [{w:"look after", m:"照顧"}, {w:"give up", m:"放棄"}, {w:"run out", m:"用完"}],
-        "N.phr": [{w:"safety net", m:"安全網"}, {w:"life goal", m:"人生目標"}, {w:"system", m:"系統"}]
+        "V.phr": [{w:"look after", m:"照顧"}, {w:"give up", m:"放棄"}, {w:"run out", m:"用完"}, {w:"bring about", m:"導致"}],
+        "N.phr": [{w:"safety net", m:"安全網"}, {w:"life goal", m:"人生目標"}, {w:"data set", m:"數據集"}, {w:"time frame", m:"時間範圍"}]
     };
 
     let sessionWords = []; let curIdx = 0; let mode = ''; let score = 0; let done = {}; 
@@ -242,7 +242,8 @@ title: "Map Wars 地圖之戰"
         mode = m; curIdx = 0; score = 0; done = {}; studentAnswers = {};
         let pool = [...rawData].sort(() => 0.5 - Math.random());
         sessionWords = pool.slice(0, Math.min(targetCount, rawData.length)).map(item => {
-            let candidates = (moePool[item.pos] || moePool["n."]);
+            // 排除與正確答案重複的選項，並嚴格過濾詞性
+            let candidates = (moePool[item.pos] || moePool["n."]).filter(c => c.w !== item.w);
             let selectedDistractors = candidates.sort(() => 0.5 - Math.random()).slice(0, 3);
             let options = [...selectedDistractors, {w: item.w, m: item.m}].sort(() => 0.5 - Math.random());
             return { ...item, fixedOptions: options };
@@ -297,7 +298,6 @@ title: "Map Wars 地圖之戰"
                 let wordToHide = item.w.trim();
                 let displayHTML = stemText;
 
-                // 修正後更彈性的正則表達式，處理不規則變化 (如 shrank, bent, spherical)
                 let pattern;
                 if (wordToHide === 'shrink') {
                     pattern = /\bshrank\b|\bshrunk\b|\bshrink\b/gi;
@@ -316,7 +316,6 @@ title: "Map Wars 地圖之戰"
                 
                 displayHTML = stemText.replace(pattern, '<span class="blank-text"> </span>');
                 
-                // 後備方案
                 if (displayHTML === stemText) {
                     let firstWord = wordToHide.split(' ')[0];
                     let loosePattern = new RegExp(`\\b${firstWord}[a-z]*\\b`, 'i');
