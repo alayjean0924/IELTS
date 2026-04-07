@@ -1,0 +1,403 @@
+---
+title: "The history of the tortoise 烏龜的歷史"
+---
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ｍs. Jin's 雅思閱讀複習字卡</title>
+    <style>
+        :root {
+            --primary: #4a90e2; --primary-dark: #357abd;
+            --success: #2ecc71; --danger: #e74c3c;
+            --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text: #2c3e50; --gold: #f39c12;
+        }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background: var(--bg); margin: 0; min-height: 100vh; display: flex; justify-content: center; padding: 20px 0; color: var(--text); }
+        #app { width: 95%; max-width: 750px; text-align: center; }
+        .screen { display: none; animation: fadeIn 0.3s ease; width: 100%; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        
+        .home-card { background: white; padding: 40px 25px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+        .home-card h1 { font-size: 2.2rem; color: var(--primary); margin: 0 0 10px; font-weight: 800; }
+        .home-card h2 { font-size: 2.1rem; color: #2c3e50; margin: 20px 0; font-weight: 900; }
+        
+        .stats-info { background: #f8f9fa; padding: 15px; border-radius: 15px; margin: 20px 0; font-weight: bold; color: #555; border: 1px solid #eee; }
+        .selector-group { margin: 25px 0; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .num-btn { background: white; border: 2px solid #ddd; padding: 12px 22px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .num-btn.selected { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
+        
+        .btn-main { background: var(--primary); color: white; border: none; padding: 18px 50px; font-size: 1.3rem; border-radius: 50px; cursor: pointer; margin: 10px; width: 85%; max-width: 320px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+        .btn-home { background: #95a5a6; font-size: 1.1rem; margin-top: 25px; }
+
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: rgba(255,255,255,0.9); padding: 15px 25px; border-radius: 20px; }
+        .btn-back-home { background: var(--primary); color: white; border: none; padding: 8px 18px; border-radius: 15px; cursor: pointer; font-weight: bold; }
+        
+        .card-container { perspective: 1500px; margin-bottom: 20px; }
+        .card-inner { position: relative; width: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; display: flex; min-height: 480px; }
+        .card-inner.is-flipped { transform: rotateY(180deg); }
+        .card-face { width: 100%; padding: 30px; background: white; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        .card-back { position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: #fffdf5; border: 3px solid var(--gold); transform: rotateY(180deg); z-index: 1; }
+        
+        .tag { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: white; margin-bottom: 10px; display: inline-block; }
+        .tag-pos { background: var(--gold); }
+        .tag-loc { background: #95a5a6; margin-left: 5px; }
+        .vocab-word { font-size: 2.8rem; color: var(--primary); font-weight: 800; margin: 10px 0; }
+        
+        .original-sent-container { background: #fffdf0; border: 2px dashed var(--gold); border-radius: 20px; padding: 20px; margin: 15px 0; text-align: left; }
+        .synonym-container { background: #ffffff; border: 1px solid #eee; border-radius: 15px; padding: 15px; margin-top: 10px; text-align: left; }
+        .synonym-title { font-weight: bold; color: #7f8c8d; font-size: 0.9rem; margin-bottom: 5px; }
+        .synonym-word { color: #e67e22; font-weight: 800; font-size: 1.1rem; }
+        .synonym-example { font-style: italic; font-size: 0.9rem; color: #95a5a6; margin-top: 5px; line-height: 1.4; }
+        
+        .sent-box { font-size: 1.4rem; line-height: 1.6; color: #34495e; text-align: left; }
+        .blank-text { color: var(--primary); font-weight: 900; border-bottom: 3px solid var(--primary) !important; padding: 0 10px; margin: 0 4px; display: inline-block; min-width: 100px; text-align: center; }
+        
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .opt-btn { background: white; border: 2px solid #eef2f7; padding: 20px; border-radius: 15px; font-size: 1.2rem; cursor: pointer; transition: 0.2s; font-weight: 600; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .opt-btn:hover { border-color: var(--primary); background: #f0f7ff; }
+        
+        .feedback-area { background: #fff; padding: 25px; border-radius: 25px; border: 2px solid #ddd; text-align: left; margin-top: 15px; }
+        .correct-style { background: var(--success) !important; color: white; border-color: var(--success); }
+        .wrong-style { background: var(--danger) !important; color: white; border-color: var(--danger); }
+        
+        .nav-bar { display: flex; justify-content: space-between; margin-top: 25px; gap: 15px; }
+        .btn-nav { flex: 1; padding: 18px; border-radius: 20px; border: none; background: white; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: var(--text); box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-nav:hover { background: #f8f9fa; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+
+        .result-list { text-align: left; background: #f8f9fa; border-radius: 20px; padding: 20px; margin-top: 25px; max-height: 450px; overflow-y: auto; }
+        .result-item { border-bottom: 1px solid #ddd; padding: 15px 0; font-size: 1.1rem; }
+        .text-green { color: var(--success); font-weight: bold; }
+        .text-red { color: var(--danger); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="home-screen" class="screen active">
+        <div class="home-card">
+            <h1>Ｍs. Jin's 雅思閱讀複習字卡</h1>
+            <h2>The history of the tortoise <br>(烏龜的演化史)</h2>
+            <div id="pool-info" class="stats-info">載入中...</div>
+            <div class="selector-group">
+                <button class="num-btn" onclick="selectCount(20)">20 題</button>
+                <button class="num-btn" onclick="selectCount(40)">40 題</button>
+                <button class="num-btn selected" onclick="selectCount(60)">全挑戰</button>
+            </div>
+            <button class="btn-main" onclick="start('review')">📖 複習模式</button><br>
+            <button class="btn-main" onclick="start('quiz')">📝 測驗模式</button>
+            <br>
+            <button class="btn-main btn-home" onclick="window.location.href='./index.html'">🏠 回到 Ms. Jin's 首頁</button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="screen">
+        <div class="top-nav">
+            <button class="btn-back-home" onclick="goHome()">🏠 回主選單</button>
+            <div style="font-weight: 800; color: var(--primary);"><span id="mode-label"></span> | <span id="progress-label"></span></div>
+        </div>
+        <div class="card-container">
+            <div class="card-inner" id="main-card-inner" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div id="quiz-stem-area" style="display:none;" class="sent-box"></div>
+                    <div id="front-meta" style="display:none;">
+                        <span class="tag tag-pos" id="front-pos"></span><span class="tag tag-loc" id="front-loc"></span>
+                        <div class="vocab-word"><span id="display-word"></span> <span onclick="playAudio('word');event.stopPropagation()">🔊</span></div>
+                        <div id="review-visual-layer">
+                            <div class="original-sent-container">
+                                <div id="review-sent" class="sent-box"></div>
+                                <button class="btn-nav" style="padding:10px 20px; font-size:0.9rem; width:auto; margin-top:10px;" onclick="playAudio('sent');event.stopPropagation()">🔊 朗讀例句</button>
+                            </div>
+                            <div id="front-synonym-box" class="synonym-container">
+                                <div class="synonym-title">IELTS 同義代換考點 (Paraphrasing)</div>
+                                <div>題目考點：<span id="syn-word-display" class="synonym-word"></span></div>
+                                <div id="syn-ex-display" class="synonym-example"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="vocab-word" id="back-word-zh" style="color: #333;"></div>
+                    <div class="sent-box" id="back-sent-zh" style="text-align:center; color:#666; font-size:1.1rem"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quiz-options-area" style="display:none;">
+            <div id="initial-options" class="options-grid"></div>
+            <div id="feedback-area" class="feedback-area" style="display:none;">
+                <div id="fb-status" style="font-weight:bold; font-size:1.3rem"></div>
+                <div id="fb-sent-full" style="font-style:italic; margin:10px 0; color:#333"></div>
+                <button class="btn-nav" style="padding:10px 20px; font-size:0.9rem; width:auto; margin-bottom:15px;" onclick="playAudio('sent')">🔊 聽正確句子</button>
+                <div id="fb-sent-zh" style="color:#666; font-size:1.1rem; border-top:1px dashed #ddd; padding-top:10px;"></div>
+                <div id="fb-options-static" class="options-grid"></div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button class="btn-nav" onclick="moveStep(-1)">← 上一個</button>
+            <button class="btn-nav" onclick="moveStep(1)">下一個 →</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="home-card">
+            <h2 id="final-title" style="margin-bottom:20px;">學習完成！</h2>
+            <div id="quiz-reveal-actions" style="display:none; margin: 20px 0;">
+                <button class="btn-main" onclick="revealReport()">📊 看成績與答案</button>
+            </div>
+            <div id="quiz-report-view" style="display:none;">
+                <div id="final-score" style="font-size: 3.5rem; color: var(--primary); font-weight: 800; margin: 10px 0;"></div>
+                <p id="final-stats" style="font-size: 1.2rem; color: #7f8c8d; margin-bottom: 20px;"></p>
+                <div id="report-list-view" class="result-list"></div>
+            </div>
+            <button class="btn-main" onclick="goHome()" style="margin-top: 25px; background: #95a5a6;">回主單元選單</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 嚴格依照要求：60單字、包含動詞片語(V.phr)與名詞搭配詞(N.phr)、擴充無斷頭例句、完整雅思同義代換
+    const rawData = [
+        // --- 核心片語 (V.phr) ---
+        {id:1,w:"go back far enough",loc:"Para 1",s:"If you go back far enough in time, you will find that everything lived in the sea.",m:"追溯得夠遠",pos:"V.phr",sz:"如果你追溯得夠久遠，你會發現所有的生物都曾生活在海中。",syn:"trace back",syne:"We can trace back the origins of terrestrial life to ancient oceans."},
+        {id:2,w:"move out onto",loc:"Para 1",s:"Enterprising individuals within many different animal groups moved out onto the land.",m:"遷移到...",pos:"V.phr",sz:"許多不同動物群體中具有進取心的個體，開始遷移到了陸地上。",syn:"migrate to",syne:"Early species had to migrate to new habitats to survive."},
+        {id:3,w:"cease to be",loc:"Para 2",s:"Whales and dugongs ceased to be land creatures altogether and reverted to the sea.",m:"不再是/停止成為",pos:"V.phr",sz:"鯨魚和儒艮完全不再是陸地生物，並且重新回到了海裡。",syn:"stop being",syne:"These animals eventually stop being reliant on land for survival."},
+        {id:4,w:"revert to",loc:"Para 2",s:"They reverted to the full marine habits of their remote ancestors.",m:"恢復/重返",pos:"V.phr",sz:"牠們恢復了其遠古祖先完全的海洋生活習性。",syn:"return to",syne:"Some terrestrial species return to a fully aquatic lifestyle over millions of years."},
+        {id:5,w:"descend from",loc:"Para 3",s:"There is evidence that all modern turtles are descended from a terrestrial ancestor.",m:"起源於/是...的後裔",pos:"V.phr",sz:"有證據顯示，所有現代烏龜都是某種陸生祖先的後裔。",syn:"originate from",syne:"Modern birds originate from feathered dinosaurs."},
+        {id:6,w:"show up",loc:"Para 4",s:"Sure enough, these amphibious species show up on the triangular graph right in the middle.",m:"出現/顯現",pos:"V.phr",sz:"果不其然，這些兩棲物種在三角形圖表上剛好出現在正中間。",syn:"appear",syne:"The missing data eventually appeared in the final analysis."},
+        {id:7,w:"turn around",loc:"Para 2",s:"A good number of thoroughgoing land animals later turned around and returned to the water.",m:"轉變方向/回頭",pos:"V.phr",sz:"許多徹底的陸生動物後來轉變方向，又回到了水裡。",syn:"reverse direction",syne:"Evolution can sometimes reverse direction depending on environmental pressures."},
+        {id:8,w:"come ashore",loc:"Para 2",s:"Unlike turtles, modern whales and dugongs do not even come ashore to breed.",m:"上岸",pos:"V.phr",sz:"與烏龜不同，現代鯨魚和儒艮甚至不會上岸繁殖。",syn:"land on the beach",syne:"Sea turtles must land on the beach to lay their eggs safely."},
+
+        // --- 名詞搭配詞 (N.phr) ---
+        {id:9,w:"evolutionary history",loc:"Para 1",s:"At various points in evolutionary history, animals took their private seawater with them onto land.",m:"演化史",pos:"N.phr",sz:"在演化史上的不同階段，動物們帶著自己的「私人海水」登上了陸地。"},
+        {id:10,w:"cellular fluid",loc:"Para 1",s:"Animals carried their own private seawater with them in blood and cellular fluids.",m:"細胞液",pos:"N.phr",sz:"動物們透過血液和細胞液，隨身攜帶著自己的「私人海水」。"},
+        {id:11,w:"marine habit",loc:"Para 2",s:"These creatures ceased to be land animals and reverted to the full marine habits.",m:"海洋習性",pos:"N.phr",sz:"這些生物不再是陸地動物，並恢復了完全的海洋生活習性。"},
+        {id:12,w:"remote ancestor",loc:"Para 2",s:"Whales adopted the marine habits of their remote ancestors who lived millions of years ago.",m:"遠古祖先",pos:"N.phr",sz:"鯨魚採用了牠們數百萬年前遠古祖先的海洋習性。"},
+        {id:13,w:"fossilised remain",loc:"Q 32",s:"It is difficult to determine where an animal lived when its fossilised remains are incomplete.",m:"化石遺骸",pos:"N.phr",sz:"當動物的化石遺骸不完整時，很難確定牠們過去生活在哪裡。",syn:"fragment",syne:"Sometimes only small fragments of ancient bones are found."},
+        {id:14,w:"dense cluster",loc:"Q 36",s:"Land tortoises were represented by a dense cluster of points towards the top of the graph.",m:"密集的群聚",pos:"N.phr",sz:"陸龜在圖表的上方呈現出密集的點群。",syn:"tight cluster",syne:"The land tortoise species formed a tight cluster of points."},
+        {id:15,w:"double return",loc:"Para 6",s:"Tortoises represent a remarkable double return from water to land and back again.",m:"雙重回歸",pos:"N.phr",sz:"烏龜代表了一種從水到陸地再回到水中的驚人雙重回歸。",syn:"transition more than once",syne:"Tortoises have made the transition from sea to land more than once."},
+        {id:16,w:"physical feature",loc:"Q 29",s:"Which physical feature, possessed by their ancestors, do modern whales lack?",m:"身體特徵",pos:"N.phr",sz:"現代鯨魚缺乏其祖先所擁有的哪一項身體特徵？"},
+        {id:17,w:"primeval bacteria",loc:"Para 6",s:"The ancestry of all animals stretches back in the sea to the primeval bacteria.",m:"原始細菌",pos:"N.phr",sz:"所有動物的血統都可以追溯到海洋中的原始細菌。"},
+        {id:18,w:"streamlined body",loc:"Para 3",s:"Ichthyosaurs were reptilian contemporaries of dinosaurs, with fins and streamlined bodies.",m:"流線型身體",pos:"N.phr",sz:"魚龍是與恐龍同時代的爬蟲類，擁有鰭和流線型的身體。",syn:"appearance",syne:"Their habitat can be determined by their physical appearance."},
+
+        // --- 雅思同義代換高頻單字 (單字卡) ---
+        {id:19,w:"invasion",loc:"Para 1",s:"Without the prior invasion of the land by plants, none of the other migrations could have happened.",m:"入侵/湧入",pos:"n.",sz:"若沒有植物先前對陸地的入侵，其他所有的動物遷徙都不可能發生。",syn:"transfer",syne:"Q27: What had to transfer from sea to land before animals migrated?"},
+        {id:20,w:"migration",loc:"Para 1",s:"The successful migration of plants made it possible for animals to leave the ocean.",m:"遷徙/移居",pos:"n.",sz:"植物的成功遷徙使動物離開海洋成為可能。",syn:"relocation",syne:"The relocation of species changed the ecosystem completely."},
+        {id:21,w:"redesign",loc:"Para 2",s:"Moving from water to land involved a major redesign of every aspect of animal life.",m:"重新設計/重大改變",pos:"n.",sz:"從水中轉移到陸地涉及動物生活各個方面的重大改變。",syn:"big change",syne:"Q28: Animals had to make big changes as they moved onto land."},
+        {id:22,w:"reproduction",loc:"Para 2",s:"This major redesign included fundamental changes in both breathing and reproduction.",m:"繁殖/生殖",pos:"n.",sz:"這項重大的改變包含了呼吸和繁殖方面的根本變化。"},
+        {id:23,w:"equivalent",loc:"Para 2",s:"Whales still breathe air, having never developed anything equivalent to the gills of their ancestors.",m:"等價物/相同物",pos:"n.",sz:"鯨魚仍然呼吸空氣，因為牠們從未演化出等同於祖先鰓的器官。",syn:"counterpart / equal",syne:"考點代換: never developed anything equivalent to (從未演化出等同物) = lack (缺乏)。"},
+        {id:24,w:"look like",loc:"Para 3",s:"The fossils of ichthyosaurs look like dolphins, and they surely lived like dolphins in the water.",m:"看起來像",pos:"V.phr",sz:"魚龍的化石看起來像海豚，牠們在水裡的生活必定也像海豚。",syn:"resemble",syne:"Q30: Which animals might ichthyosaurs have resembled?"},
+        {id:25,w:"tell",loc:"Para 3",s:"You might wonder how we can tell whether fossil animals lived on land or in water.",m:"判斷/分辨",pos:"v.",sz:"你可能會好奇，我們如何判斷化石動物過去是生活在陸地還是水中。",syn:"determine",syne:"Q32: It is difficult to determine where an animal lived."},
+        {id:26,w:"fragment",loc:"Para 3",s:"Determining an animal's habitat is hard, especially if only bone fragments are found.",m:"碎片",pos:"n.",sz:"判斷動物棲息地很困難，特別是如果只找到骨頭碎片的話。",syn:"incomplete remains",syne:"Q32: ...when its fossilised remains are incomplete."},
+        {id:27,w:"plot",loc:"Para 4",s:"Scientists used a kind of triangular graph paper to plot the three measurements.",m:"標繪/紀錄",pos:"v.",sz:"科學家使用一種三角形圖表紙來標繪這三項測量數據。",syn:"record",syne:"Q35: The data was recorded on a triangular graph."},
+        {id:28,w:"cluster",loc:"Para 4",s:"All the land tortoise species formed a tight cluster of points in the upper part of the triangle.",m:"群聚/叢集",pos:"n.",sz:"所有陸龜物種在三角形上方形成了一個密集的點群。",syn:"group / gathering",syne:"考點代換: a tight cluster (緊密的群聚) = a dense cluster / group (密集的群聚)。"},
+        {id:29,w:"amphibious",loc:"Para 4",s:"These amphibious species spend time both in water and on land.",m:"兩棲的",pos:"adj.",sz:"這些兩棲物種會將時間分配在水中和陸地上。"},
+        {id:30,w:"approximately",loc:"Para 4",s:"These species show up on the graph approximately half way between sea turtles and land tortoises.",m:"大約/大概",pos:"adv.",sz:"這些物種在圖表上出現的位置，大約在海龜和陸龜的中間。",syn:"about",syne:"Q38: positioned about half way up the triangle."},
+        
+        // --- 雅思級別進階高難度字 ---
+        {id:31,w:"enterprising",loc:"Para 1",s:"Some enterprising individuals within different animal groups decided to explore the harsh land.",m:"有進取心的/有魄力的",pos:"adj.",sz:"不同動物群體中一些具備進取心的個體，決定探索嚴酷的陸地。"},
+        {id:32,w:"parched",loc:"Para 1",s:"Animals moved out onto the land, sometimes even venturing into the most parched deserts.",m:"乾旱的/焦乾的",pos:"adj.",sz:"動物遷移到陸地上，有時甚至冒險進入最乾旱的沙漠。"},
+        {id:33,w:"thoroughgoing",loc:"Para 2",s:"A good number of thoroughgoing land animals abandoned their terrestrial life.",m:"徹底的/完全的",pos:"adj.",sz:"許多徹底適應陸地生活的動物放棄了牠們的陸生生活。"},
+        {id:34,w:"terrestrial",loc:"Para 2",s:"All modern turtles are descended from a terrestrial ancestor which lived before the dinosaurs.",m:"陸生的/地球的",pos:"adj.",sz:"所有現代烏龜都是一種生活在恐龍之前的陸生祖先的後代。"},
+        {id:35,w:"re-tooling",loc:"Para 2",s:"They abandoned their hard-earned terrestrial re-tooling and returned to the water.",m:"重新裝備/改造",pos:"n.",sz:"牠們放棄了得來不易的陸地適應改造，重新回到了水中。"},
+        {id:36,w:"intermediate",loc:"Para 2",s:"Seals show us what the intermediates might have been like during this long transition.",m:"中間物/過渡期",pos:"n.",sz:"海豹向我們展示了在這漫長的過渡期中，中間物種可能長什麼樣子。"},
+        {id:37,w:"incarnation",loc:"Para 2",s:"They breathe air, having never developed gills like their earlier marine incarnation.",m:"化身/前世",pos:"n.",sz:"牠們呼吸空氣，因為從未演化出像牠們早期海洋化身那樣的鰓。"},
+        {id:38,w:"vertebrate",loc:"Para 2",s:"Turtles went back to the sea, and like all vertebrate returnees, they breathe air.",m:"脊椎動物",pos:"n.",sz:"烏龜回到海裡，就像所有重返水中的脊椎動物一樣，牠們呼吸空氣。"},
+        {id:39,w:"contemporary",loc:"Para 3",s:"Ichthyosaurs were reptilian contemporaries of the dinosaurs, ruling the ancient seas.",m:"同時代的人/物",pos:"n.",sz:"魚龍是與恐龍同時代的爬蟲類，統治著遠古海洋。"},
+        {id:40,w:"forelimb",loc:"Para 4",s:"One way to tell their origin is by carefully measuring the bones of their forelimbs.",m:"前肢",pos:"n.",sz:"判斷牠們起源的一個方法是仔細測量牠們前肢的骨頭。"},
+        {id:41,w:"aquatic",loc:"Para 5",s:"If you draw the family tree of modern turtles, nearly all the branches are aquatic.",m:"水生的",pos:"adj.",sz:"如果你畫出現代烏龜的家族樹，幾乎所有的分支都是水生物種。"},
+        {id:42,w:"re-emerge",loc:"Para 5",s:"They went back to the water, and then re-emerged back onto the land in more recent times.",m:"重新出現/再次浮現",pos:"v.",sz:"牠們回到了水中，然後在相對較近的時期再次浮現回到陸地。"},
+        {id:43,w:"overlap",loc:"Para 4",s:"There was no overlap on the graph between the dry cluster and the wet cluster.",m:"重疊/交集",pos:"n.",sz:"在圖表上，乾燥群集和潮濕群集之間沒有任何重疊。"},
+        {id:44,w:"descendant",loc:"Para 3",s:"Humans and apes share a common ancestor, making us distant descendants.",m:"後代/子孫",pos:"n.",sz:"人類和猿類擁有共同的祖先，這使我們成為遠親後代。"},
+        {id:45,w:"mammal",loc:"Para 2",s:"In addition to reptiles and birds, many mammals have also succeeded out of water.",m:"哺乳動物",pos:"n.",sz:"除了爬蟲類和鳥類，許多哺乳動物也成功地離開了水面。"},
+        {id:46,w:"reptile",loc:"Para 1",s:"Snakes, lizards, and turtles are all classified as cold-blooded reptiles.",m:"爬蟲類",pos:"n.",sz:"蛇、蜥蜴和烏龜都被歸類為冷血爬蟲類。"},
+        {id:47,w:"generation",loc:"Para 6",s:"Their ancestors lived on land and stayed there for a very large number of generations.",m:"世代/一代",pos:"n.",sz:"牠們的祖先生活在陸地上，並在那裡停留了非常多個世代。"},
+        {id:48,w:"habitat",loc:"Q 33",s:"The ancient habitat of ichthyosaurs can be determined by their distinct appearance.",m:"棲息地",pos:"n.",sz:"魚龍古老的棲息地可以從其獨特的外觀來判定。"},
+        {id:49,w:"incomplete",loc:"Q 32",s:"Scientific analysis becomes tricky when the fossilised remains are unfortunately incomplete.",m:"不完整的",pos:"adj.",sz:"當化石遺骸不幸不完整時，科學分析就會變得很棘手。"},
+        {id:50,w:"transition",loc:"Q 40",s:"Tortoises have made the incredible transition from sea to land more than once.",m:"轉變/過渡",pos:"n.",sz:"烏龜已經不止一次完成了從海到陸地的驚人轉變。"},
+        {id:51,w:"significant",loc:"Q 40",s:"The most significant thing about tortoises is their remarkable evolutionary journey.",m:"重要的/顯著的",pos:"adj.",sz:"關於烏龜最重要的事情是牠們驚人的演化之旅。"},
+        {id:52,w:"continuous",loc:"Para 5",s:"Modern land tortoises have not stayed on land continuously since the time of early dinosaurs.",m:"連續的/不斷的",pos:"adj.",sz:"自早期恐龍時代以來，現代陸龜並沒有連續不斷地留在陸地上。"},
+        {id:53,w:"represent",loc:"Para 6",s:"Tortoises therefore represent a remarkable double return in evolutionary history.",m:"代表/象徵",pos:"v.",sz:"因此，烏龜在演化史上代表著一次驚人的雙重回歸。"},
+        {id:54,w:"measurement",loc:"Para 4",s:"Scientists obtained three precise measurements from the bones of 71 species.",m:"測量(值)",pos:"n.",sz:"科學家從71個物種的骨頭中取得了三個精確的測量值。"},
+        {id:55,w:"prior",loc:"Para 1",s:"Plants made a prior invasion of the land before any animals could follow.",m:"在先的/之前的",pos:"adj.",sz:"在任何動物能跟隨之前，植物率先入侵了陸地。"},
+        {id:56,w:"abandon",loc:"Para 2",s:"Animals abandoned their adaptations and returned to the water when the land became harsh.",m:"放棄/拋棄",pos:"v.",sz:"當陸地變得嚴酷時，動物們放棄了牠們的適應特徵並回到了水中。"},
+        {id:57,w:"obvious",loc:"Para 3",s:"When fossils possess fins and streamlined bodies, it is obvious they lived in water.",m:"明顯的/顯而易見的",pos:"adj.",sz:"當化石擁有鰭和流線型身體時，很明顯牠們過去生活在水中。"},
+        {id:58,w:"era",loc:"Para 4",s:"These fossils come from the era before our modern turtles returned to the water.",m:"時代/紀元",pos:"n.",sz:"這些化石來自我們現代烏龜返回水中之前的時代。"},
+        {id:59,w:"branch",loc:"Para 5",s:"Today's land tortoises constitute a single branch deeply nested among aquatic turtles.",m:"分支/樹枝",pos:"n.",sz:"今天的陸龜構成了一個深嵌在水生烏龜中的單一分支。"},
+        {id:60,w:"constitute",loc:"Para 5",s:"The dry-land species constitute only a small fraction of the entire family tree.",m:"構成/組成",pos:"v.",sz:"陸地物種僅構成整個家族樹的一小部分。"}
+    ];
+
+    // 嚴格定義的詞性干擾選項池 (確保測驗時選項難度與詞性一致)
+    const moePool = {
+        "n.": [{w:"safety", m:"安全"}, {w:"target", m:"目標"}, {w:"logic", m:"邏輯"}, {w:"method", m:"方法"}, {w:"benefit", m:"益處"}, {w:"impact", m:"影響"}],
+        "v.": [{w:"attack", m:"攻擊"}, {w:"ignore", m:"忽略"}, {w:"manage", m:"管理"}, {w:"confirm", m:"確認"}, {w:"improve", m:"改善"}, {w:"require", m:"要求"}],
+        "adj.": [{w:"stable", m:"穩定的"}, {w:"common", m:"常見的"}, {w:"direct", m:"直接的"}, {w:"active", m:"活躍的"}, {w:"complex", m:"複雜的"}, {w:"initial", m:"最初的"}],
+        "adv.": [{w:"clearly", m:"清楚地"}, {w:"actually", m:"實際上"}, {w:"totally", m:"完全地"}, {w:"hardly", m:"幾乎不"}, {w:"merely", m:"僅僅"}],
+        "V.phr": [{w:"look after", m:"照顧"}, {w:"give up", m:"放棄"}, {w:"run out", m:"用完"}, {w:"bring about", m:"導致"}, {w:"rely on", m:"依賴"}, {w:"consist of", m:"由...組成"}],
+        "N.phr": [{w:"safety net", m:"安全網"}, {w:"life goal", m:"人生目標"}, {w:"data set", m:"數據集"}, {w:"time frame", m:"時間範圍"}, {w:"side effect", m:"副作用"}, {w:"core value", m:"核心價值"}]
+    };
+
+    let sessionWords = []; let curIdx = 0; let mode = ''; let score = 0; let done = {}; 
+    let studentAnswers = {}; let targetCount = 60;
+
+    function selectCount(n) { targetCount = n; document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected')); event.target.classList.add('selected'); }
+    function updateStats() { document.getElementById('pool-info').innerText = "雅思核心單字庫: " + rawData.length + " 字"; }
+
+    function start(m) {
+        mode = m; curIdx = 0; score = 0; done = {}; studentAnswers = {};
+        let pool = [...rawData].sort(() => 0.5 - Math.random());
+        sessionWords = pool.slice(0, Math.min(targetCount, rawData.length)).map(item => {
+            // 過濾掉可能重複的正確答案，確保選項乾淨
+            let candidates = (moePool[item.pos] || moePool["n."]).filter(c => c.w !== item.w);
+            let selectedDistractors = candidates.sort(() => 0.5 - Math.random()).slice(0, 3);
+            let options = [...selectedDistractors, {w: item.w, m: item.m}].sort(() => 0.5 - Math.random());
+            return { ...item, fixedOptions: options };
+        });
+        document.getElementById('home-screen').classList.remove('active');
+        document.getElementById('main-screen').classList.add('active');
+        document.getElementById('mode-label').innerText = mode === 'review' ? '複習模式' : '測驗模式';
+        render();
+    }
+
+    function render() {
+        if (curIdx >= sessionWords.length) { showFinal(); return; }
+        const item = sessionWords[curIdx]; const isDone = done[curIdx] !== undefined;
+        document.getElementById('progress-label').innerText = `${curIdx + 1} / ${sessionWords.length}`;
+        document.getElementById('main-card-inner').classList.remove('is-flipped');
+        
+        const quizStem = document.getElementById('quiz-stem-area');
+        const frontMeta = document.getElementById('front-meta');
+        const quizOptions = document.getElementById('quiz-options-area');
+        const reviewLayer = document.getElementById('review-visual-layer');
+
+        if (mode === 'review') {
+            quizStem.style.display = 'none'; quizOptions.style.display = 'none'; frontMeta.style.display = 'block';
+            reviewLayer.style.display = 'block'; 
+            document.getElementById('display-word').innerText = item.w;
+            document.getElementById('front-pos').innerText = item.pos;
+            document.getElementById('front-loc').innerText = item.loc;
+            document.getElementById('review-sent').innerText = item.s;
+            const synBox = document.getElementById('front-synonym-box');
+            if (item.syn) {
+                document.getElementById('syn-word-display').innerText = item.syn.toLowerCase();
+                document.getElementById('syn-ex-display').innerText = "💡 " + (item.syne || "");
+                synBox.style.display = 'block';
+            } else { synBox.style.display = 'none'; }
+        } else {
+            reviewLayer.style.display = 'none';
+            frontMeta.style.display = isDone ? 'block' : 'none'; 
+            quizStem.style.display = 'block'; quizOptions.style.display = 'block';
+            document.getElementById('display-word').innerText = item.w;
+            document.getElementById('front-pos').innerText = item.pos;
+            document.getElementById('front-loc').innerText = item.loc;
+
+            const fb = document.getElementById('feedback-area'); const opts = document.getElementById('initial-options');
+            if (isDone) {
+                opts.style.display = 'none'; fb.style.display = 'block';
+                quizStem.innerText = item.s; 
+                updateFB(item);
+            } else {
+                fb.style.display = 'none'; opts.style.display = 'grid';
+                
+                let stemText = item.s;
+                let wordToHide = item.w.trim();
+                let displayHTML = stemText;
+
+                // 智慧填空邏輯 (處理片語、時態、單複數)
+                let pattern;
+                if (wordToHide.includes(' ')) {
+                    let parts = wordToHide.split(/\s+/);
+                    let regexStr = `\\b${parts[0]}(ed|ing|s|es|d|n|t)?`; 
+                    for(let i=1; i<parts.length; i++) { regexStr += `\\s+${parts[i]}(ed|ing|s|es|d)?`; }
+                    pattern = new RegExp(regexStr + `\\b`, 'gi');
+                } else {
+                    pattern = new RegExp(`\\b${wordToHide}(ed|ing|s|es|d|n|t)?\\b`, 'gi');
+                }
+                
+                displayHTML = stemText.replace(pattern, '<span class="blank-text"> </span>');
+                
+                if (displayHTML === stemText) {
+                    let firstWord = wordToHide.split(' ')[0];
+                    let loosePattern = new RegExp(`\\b${firstWord}[a-z]*\\b`, 'i');
+                    displayHTML = stemText.replace(loosePattern, '<span class="blank-text"> </span>');
+                }
+
+                quizStem.innerHTML = displayHTML;
+                renderOptions(item);
+            }
+        }
+        document.getElementById('back-word-zh').innerText = item.m;
+        document.getElementById('back-sent-zh').innerText = item.sz;
+    }
+
+    function renderOptions(item) {
+        const container = document.getElementById('initial-options'); container.innerHTML = '';
+        item.fixedOptions.forEach(opt => {
+            const b = document.createElement('button'); b.className = 'opt-btn'; b.innerText = opt.w;
+            b.onclick = (e) => { e.stopPropagation(); studentAnswers[curIdx] = opt.w; checkAns(opt.w === item.w); };
+            container.appendChild(b);
+        });
+    }
+
+    function checkAns(isCorrect) { if (isCorrect) score++; done[curIdx] = isCorrect; render(); }
+    function updateFB(item) {
+        const correct = done[curIdx]; const fb = document.getElementById('feedback-area');
+        document.getElementById('fb-status').innerText = correct ? '✓ Correct!' : '✗ Incorrect';
+        document.getElementById('fb-status').style.color = correct ? 'var(--success)' : 'var(--danger)';
+        document.getElementById('fb-sent-full').innerText = item.s;
+        document.getElementById('fb-sent-zh').innerText = "解析翻譯：" + item.sz;
+        const area = document.getElementById('fb-options-static'); area.innerHTML = '';
+        item.fixedOptions.forEach(opt => {
+            const d = document.createElement('div'); d.className = 'opt-btn ' + (opt.w === item.w ? 'correct-style' : (studentAnswers[curIdx] === opt.w ? 'wrong-style' : ''));
+            d.innerHTML = `<div>${opt.w}</div><div style="font-size:0.8rem; opacity:0.8">${opt.m}</div>`;
+            d.style.textAlign = 'center'; area.appendChild(d);
+        });
+    }
+    function flipCard() { document.getElementById('main-card-inner').classList.toggle('is-flipped'); }
+    function moveStep(n) { let next = curIdx + n; if (next >= sessionWords.length) { showFinal(); } else if (next >= 0) { curIdx = next; render(); } }
+    function showFinal() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('result-screen').classList.add('active');
+        if (mode === 'quiz') { 
+            document.getElementById('quiz-reveal-actions').style.display = 'block'; 
+            document.getElementById('quiz-report-view').style.display = 'none'; 
+            document.getElementById('final-title').innerText = "🏆 測驗完成！"; 
+        } else { 
+            document.getElementById('quiz-reveal-actions').style.display = 'none'; 
+            revealReport(); 
+            document.getElementById('final-title').innerText = "🏆 複習完成！"; 
+        }
+    }
+    function revealReport() {
+        document.getElementById('quiz-reveal-actions').style.display = 'none';
+        document.getElementById('quiz-report-view').style.display = 'block';
+        const rate = Math.round((score/sessionWords.length)*100);
+        document.getElementById('final-score').innerText = mode === 'review' ? "複習完畢" : `${rate}%`;
+        document.getElementById('final-stats').innerText = mode === 'review' ? `今日複習了 ${sessionWords.length} 個單字` : `總答對率：${rate}% | 實得題數：${score} / ${sessionWords.length}`;
+        const listArea = document.getElementById('report-list-view'); listArea.innerHTML = '';
+        sessionWords.forEach((item, index) => {
+            const isCorrect = done[index]; const div = document.createElement('div'); div.className = 'result-item';
+            if (mode === 'quiz') {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">題 ${index + 1}：${item.s}</div>
+                    <div>你的作答：<span class="${isCorrect ? 'text-green' : 'text-red'}">${studentAnswers[index] || "（跳過）"}</span></div>
+                    <div class="text-green">正確答案：${item.w} (${item.m})</div>`;
+            } else {
+                div.innerHTML = `<div style="font-weight:bold; margin-bottom:5px;">${item.s}</div><div class="text-green">正確單字：${item.w} (${item.m})</div>`;
+            }
+            listArea.appendChild(div);
+        });
+    }
+    function playAudio(type) {
+        const item = sessionWords[curIdx]; if(!item) return;
+        const utter = new SpeechSynthesisUtterance(type === 'word' ? item.w : item.s);
+        utter.lang = 'en-US'; window.speechSynthesis.speak(utter);
+    }
+    function goHome() { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById('home-screen').classList.add('active'); updateStats(); }
+    window.onload = updateStats;
+</script>
+</body>
+</html>
